@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import java.swing.*;
+import javax.swing.*;
 
 public class BlackJack{
     private class Card{
@@ -36,6 +36,10 @@ public class BlackJack{
         public boolean isAce(){
             return value == "A";
         }
+
+        public String getImagePath(){
+            return "/cards/" + toString() + ".png";
+        }
     }
 
     ArrayList<Card> deck;
@@ -55,12 +59,35 @@ public class BlackJack{
     //window
     int boardWidth = 600;
     int boardHeight = boardWidth;
+    int cardWidth = 110;
+    int cardHeight = 154;
 
     JFrame frame = new JFrame("Black Jack");
-    JPanel gamePanel = new JPanel();
+    JPanel gamePanel = new JPanel(){
+        @Override
+        public void paintComponent(Graphics g){
+            super.paintComponent(g);
+
+            try{
+                //draw hidden card
+                Image hiddenCardImg = new ImageIcon(getClass().getResource("/cards/BACK.png")).getImage();
+                g.drawImage(hiddenCardImg,20,20,cardWidth,cardHeight,null);
+
+                //draw dealer's hand
+                for (int i=0;i<dealerHand.size();i++){
+                    Card card=dealerHand.get(i);
+                    Image cardImg = new ImageIcon(getClass().getResource(card.getImagePath())).getImage();
+                    g.drawImage(cardImg,cardWidth + 25 + (cardWidth + 5)*i,20,cardWidth,cardHeight,null);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+        }
+    };
     JPanel buttonPanel = new JPanel();
     JButton hitButton = new JButton("Hit");
-    JButton stayButton = new JButton("Stay");;
+    JButton stayButton = new JButton("Stay");
     
     BlackJack(){
         startGame();
