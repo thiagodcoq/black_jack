@@ -17,10 +17,30 @@ public class BlackJack{
         public String toString(){
             return value + "-" + type;
         }
+
+        public int getValue(){
+            if ("AJQK".contains(value)){ //AJQK
+                if (value=="A"){
+                    return 11;
+                }
+                return 10;
+            }
+            return Integer.parseInt(value); //2-10
+        }
+
+        public boolean isAce(){
+            return value == "A";
+        }
     }
 
     ArrayList<Card> deck;
     Random random = new Random(); //shuffle deck
+
+    //dealer
+    Card hiddenCard;
+    ArrayList<Card> dealerHand;
+    int dealerSum;
+    int dealerAceCount;
 
     BlackJack(){
         startGame();
@@ -29,6 +49,26 @@ public class BlackJack{
         //deck
         buildDeck();
         shuffleDeck();
+
+        //dealer
+        dealerHand= new ArrayList<Card>();
+        dealerSum = 0;
+        dealerAceCount=0;
+
+        hiddenCard = deck.remove(deck.size()-1); //remove last card of the deck (last index)
+        dealerSum+=hiddenCard.getValue();
+        dealerAceCount+=hiddenCard.isAce() ? 1 : 0;
+
+        Card card = deck.remove(deck.size()-1);
+        dealerSum+=card.getValue();
+        dealerAceCount+=card.isAce() ? 1 : 0;
+        dealerHand.add(card);
+
+        System.out.println("DEALER: ");
+        System.out.println(hiddenCard);
+        System.out.println(dealerHand);
+        System.out.println(dealerSum);
+        System.out.println(dealerAceCount);
     }
     public void buildDeck(){
         deck = new ArrayList<Card>();
